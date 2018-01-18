@@ -499,10 +499,7 @@ void BitcoinGUI::setClientModel(ClientModel *clientModel)
         // Propagate cleared model to child objects
         rpcConsole->setClientModel(nullptr);
 #ifdef ENABLE_WALLET
-        if (walletFrame)
-        {
-            walletFrame->setClientModel(nullptr);
-        }
+        walletFrame->setClientModel(nullptr);
 #endif // ENABLE_WALLET
         unitDisplayControl->setOptionsModel(nullptr);
     }
