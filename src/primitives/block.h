@@ -10,6 +10,11 @@
 #include "serialize.h"
 #include "uint256.h"
 
+#define BLOCK_HASH_PRE_PMC2_N_SIZE  (1 << (9 + 1))
+#define BLOCK_HASH_PRE_PMC2_MODE    (1)
+#define BLOCK_HASH_PMC2_MODE        (2)
+#define BLOCK_HASH_PMC2_N_SIZE      (1 << (14 + 1))
+
 /** Nodes collect new transactions into a block, hash them into a hash tree,
  * and scan through nonce values to make the block's hash satisfy proof-of-work
  * requirements.  When they solve the proof-of-work, they broadcast the block
@@ -62,7 +67,8 @@ public:
 
     uint256 GetHash() const;
 
-    uint256 GetPoWHash() const;
+    //uint256 GetPoWHash(uint8_t hash_mode = BLOCK_HASH_PRE_PMC2_MODE) const;
+    uint256 GetPoWHash(uint8_t hash_mode) const;  // do not use default to force errors on unmodified calls
 
     int64_t GetBlockTime() const
     {

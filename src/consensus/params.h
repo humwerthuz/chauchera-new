@@ -68,6 +68,7 @@ struct Params {
 
     // Propuestas de Mejora para Chaucha
     int PMC1;
+    int PMC2;
 };
 } // namespace Consensus
 
