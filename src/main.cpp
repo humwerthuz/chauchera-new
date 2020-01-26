@@ -3780,6 +3780,15 @@ static bool AcceptBlock(const CBlock& block, CValidationState& state, const CCha
         return error("%s: %s", __func__, FormatStateMessage(state));
     }
 
+    //PMC2: Validation for new ScryptN
+    int scrypt_mode = chainActive.Height() > chainparams.GetConsensus().PMC2 ? BLOCK_HASH_PMC2_MODE : BLOCK_HASH_PRE_PMC2_MODE;
+
+    // Check the header
+    if (!CheckProofOfWork(block.GetPoWHash(scrypt_mode), block.nBits, chainparams.GetConsensus())){
+        return error("AcceptBlock(): CheckProofOfWork failed, maybe not using correct Scrypt Mode (Check PMC2 definitions for more details)");
+    }
+
+
     int nHeight = pindex->nHeight;
 
     // Write block to history file
