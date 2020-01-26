@@ -1702,10 +1702,8 @@ bool ReadBlockFromDisk(CBlock& block, const CDiskBlockPos& pos, const Consensus:
         return error("%s: Deserialize or I/O error - %s at %s", __func__, e.what(), pos.ToString());
     }
 
-    int scrypt_mode = chainActive.Height() > consensusParams.PMC2 ? BLOCK_HASH_PMC2_MODE : BLOCK_HASH_PRE_PMC2_MODE;
-
     // Check the header
-    if (!CheckProofOfWork(block.GetPoWHash(scrypt_mode), block.nBits, consensusParams))
+    if (!CheckProofOfWork(block.GetPoWHash(GET_ACTIVE_CHAIN_SCRYPT_MODE(chainActive, consensusParams)), block.nBits, consensusParams))
         return error("ReadBlockFromDisk: Errors in block header at %s", pos.ToString());
 
     return true;
@@ -3398,9 +3396,8 @@ bool FindUndoPos(CValidationState &state, int nFile, CDiskBlockPos &pos, unsigne
 
 bool CheckBlockHeader(const CBlockHeader& block, CValidationState& state, const Consensus::Params& consensusParams, bool fCheckPOW)
 {
-    int scrypt_mode = chainActive.Height() > consensusParams.PMC2 ? BLOCK_HASH_PMC2_MODE : BLOCK_HASH_PRE_PMC2_MODE;
     // Check proof of work matches claimed amount
-    if (fCheckPOW && !CheckProofOfWork(block.GetPoWHash(scrypt_mode), block.nBits, consensusParams))
+    if (fCheckPOW && !CheckProofOfWork(block.GetPoWHash(GET_ACTIVE_CHAIN_SCRYPT_MODE(chainActive, consensusParams)), block.nBits, consensusParams))
         return state.DoS(50, false, REJECT_INVALID, "high-hash", false, "proof of work failed");
 
     return true;
@@ -3779,15 +3776,6 @@ static bool AcceptBlock(const CBlock& block, CValidationState& state, const CCha
         }
         return error("%s: %s", __func__, FormatStateMessage(state));
     }
-
-    //PMC2: Validation for new ScryptN
-    int scrypt_mode = chainActive.Height() > chainparams.GetConsensus().PMC2 ? BLOCK_HASH_PMC2_MODE : BLOCK_HASH_PRE_PMC2_MODE;
-
-    // Check the header
-    if (!CheckProofOfWork(block.GetPoWHash(scrypt_mode), block.nBits, chainparams.GetConsensus())){
-        return error("AcceptBlock(): CheckProofOfWork failed, maybe not using correct Scrypt Mode (Check PMC2 definitions for more details)");
-    }
-
 
     int nHeight = pindex->nHeight;
 
