@@ -187,11 +187,11 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = 1230767999; // December 31, 2008
 
         /** DarkGravityWell v3 Fork Params - Humwerthuz @ 30/12/2017 **/
-        consensus.nPowDGWHeight = 200; //DGW always on
+        consensus.nPowDGWHeight = 20; //DGW always on
 
         // Propuestas de Mejora para Chaucha (PMC)
-        consensus.PMC1 = 235;
-        consensus.PMC2 = (435 - 1);  // completamente random, Target = 435
+        consensus.PMC1 = 30;
+        consensus.PMC2 = (40 - 1);  // completamente random, Target = 435
 
         // Deployment of BIP68, BIP112, and BIP113.
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].bit = 0;
