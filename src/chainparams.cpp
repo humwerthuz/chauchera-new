@@ -92,6 +92,7 @@ public:
 
         // Propuestas de Mejora para Chaucha (PMC)
         consensus.PMC1 = 220000;
+        consensus.PMC2 = 1200000;  //block height 1.200.000.-
 
         // Deployment of BIP68, BIP112, and BIP113.
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].bit = 0;
@@ -190,6 +191,7 @@ public:
 
         // Propuestas de Mejora para Chaucha (PMC)
         consensus.PMC1 = 235;
+        consensus.PMC2 = (435 - 1);  // completamente random, Target = 435
 
         // Deployment of BIP68, BIP112, and BIP113.
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].bit = 0;
