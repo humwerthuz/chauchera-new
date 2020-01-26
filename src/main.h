@@ -43,7 +43,7 @@ struct PrecomputedTransactionData;
 struct CNodeStateStats;
 struct LockPoints;
 
-#define GET_ACTIVE_CHAIN_SCRYPT_MODE(chain, consensus) ((chain).Height() + 1 > (consensus).PMC2 ? BLOCK_HASH_PMC2_MODE : BLOCK_HASH_PRE_PMC2_MODE)
+#define GET_ACTIVE_CHAIN_SCRYPT_MODE(chain, consensus) ((chain).Height() + 1 >= (consensus).PMC2 ? BLOCK_HASH_PMC2_MODE : BLOCK_HASH_PRE_PMC2_MODE)
 
 /** Default for DEFAULT_WHITELISTRELAY. */
 static const bool DEFAULT_WHITELISTRELAY = true;
