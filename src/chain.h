@@ -276,10 +276,10 @@ public:
         return *phashBlock;
     }
 
-    uint256 GetBlockPoWHash(int scrypt_mode) const  //although this is not being use, let's force forward compat.
+    uint256 GetBlockPoWHash() const  //although this is not being use, let's force forward compat.
     {
 
-        return GetBlockHeader().GetPoWHash(scrypt_mode);
+        return GetBlockHeader().GetPoWHash();
     }
 
     int64_t GetBlockTime() const
