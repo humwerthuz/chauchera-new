@@ -109,8 +109,6 @@ UniValue generateBlocks(boost::shared_ptr<CReserveScript> coinbaseScript, int nG
         nHeightEnd = nHeightStart+nGenerate;
     }
     
-    int scrypt_mode = chainActive.Height() > Params().GetConsensus().PMC2 ? BLOCK_HASH_PMC2_MODE : BLOCK_HASH_PRE_PMC2_MODE;
-
     unsigned int nExtraNonce = 0;
     UniValue blockHashes(UniValue::VARR);
     while (nHeight < nHeightEnd)
@@ -123,7 +121,7 @@ UniValue generateBlocks(boost::shared_ptr<CReserveScript> coinbaseScript, int nG
             LOCK(cs_main);
             IncrementExtraNonce(pblock, chainActive.Tip(), nExtraNonce);
         }
-        while (nMaxTries > 0 && pblock->nNonce < nInnerLoopCount && !CheckProofOfWork(pblock->GetPoWHash(scrypt_mode), pblock->nBits, Params().GetConsensus())) {
+        while (nMaxTries > 0 && pblock->nNonce < nInnerLoopCount && !CheckProofOfWork(pblock->GetPoWHash(), pblock->nBits, Params().GetConsensus())) {
             ++pblock->nNonce;
             --nMaxTries;
         }

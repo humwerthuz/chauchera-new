@@ -1701,6 +1701,10 @@ bool ReadBlockFromDisk(CBlock& block, const CDiskBlockPos& pos, const Consensus:
     catch (const std::exception& e) {
         return error("%s: Deserialize or I/O error - %s at %s", __func__, e.what(), pos.ToString());
     }
+
+    if (!CheckProofOfWork(block.GetPoWHash(), block.nBits, consensusParams))
+        return error("ReadBlockFromDisk: Errors in block header at %s", pos.ToString());
+
     return true;
 }
 
@@ -1711,8 +1715,6 @@ bool ReadBlockFromDisk(CBlock& block, const CBlockIndex* pindex, const Consensus
     if (block.GetHash() != pindex->GetBlockHash())
         return error("ReadBlockFromDisk(CBlock&, CBlockIndex*): GetHash() doesn't match index for %s at %s",
                 pindex->ToString(), pindex->GetBlockPos().ToString());
-    if (!CheckProofOfWork(block.GetPoWHash(GET_ACTIVE_CHAIN_SCRYPT_MODE(pindex->nHeight - 1, consensusParams)), block.nBits, consensusParams))
-        return error("ReadBlockFromDisk: Errors in block header at %s", pindex->GetBlockPos().ToString());
 
     return true;
 }
@@ -3395,7 +3397,7 @@ bool FindUndoPos(CValidationState &state, int nFile, CDiskBlockPos &pos, unsigne
 bool CheckBlockHeader(const CBlockHeader& block, CValidationState& state, const Consensus::Params& consensusParams, bool fCheckPOW)
 {
     // Check proof of work matches claimed amount
-    if (fCheckPOW && !CheckProofOfWork(block.GetPoWHash(GET_ACTIVE_CHAIN_SCRYPT_MODE(chainActive.Height(), consensusParams)), block.nBits, consensusParams))
+    if (fCheckPOW && !CheckProofOfWork(block.GetPoWHash(), block.nBits, consensusParams))
         return state.DoS(50, false, REJECT_INVALID, "high-hash", false, "proof of work failed");
 
     return true;
@@ -3564,6 +3566,16 @@ bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationState& sta
             if (IsSuperMajority(2, pindexPrev, consensusParams.nMajorityRejectBlockOutdated, consensusParams))
                 enforceV2 = true;
         }
+    }
+
+    bool enforceV3 = false;
+    if (block.nVersion < 3 && nHeight >= consensusParams.PMC2) {
+        enforceV3 = true;
+    }
+
+    if (enforceV3) {
+        return state.Invalid(false, REJECT_OBSOLETE, strprintf("bad-version(0x%08x)", block.nVersion),
+                             strprintf("rejected nVersion=0x%08x for block height %d", block.nVersion, nHeight));
     }
 
     if (enforceV2) {
