@@ -3569,7 +3569,7 @@ bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationState& sta
     }
 
     bool enforceV3 = false;
-    if (block.nVersion < 3 && nHeight >= consensusParams.PMC2) {
+    if (block.nVersion < 3 && nHeight > consensusParams.PMC2) {
         enforceV3 = true;
     }
 

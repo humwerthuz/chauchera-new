@@ -10,8 +10,6 @@
 #include "tinyformat.h"
 #include "utilstrencodings.h"
 #include "crypto/common.h"
-#include "base58.h"
-#include "broken-blocks.h"
 
 uint256 CBlockHeader::GetHash() const
 {
@@ -24,13 +22,10 @@ uint256 CBlockHeader::GetPoWHash() const
     uint256 chash = GetHash();
     unsigned int target_N_size;
 
-    target_N_size = nVersion < 3 ? BLOCK_HASH_PRE_PMC2_N_SIZE : BLOCK_HASH_PMC2_N_SIZE;
+    target_N_size = nVersion < 0x30000000 ? BLOCK_HASH_PRE_PMC2_N_SIZE : BLOCK_HASH_PMC2_N_SIZE;
 
     printf("GetPoWHash: using N size %d for nVersion %d at block %s \n", target_N_size, nVersion, chash.ToString().c_str());
 
-    // 26/01/2020: En honor al sacowea que pifio los version bits de los siguientes bloques: CHUPALO!!!
-    if (is_block_version_broken(chash)) target_N_size = BLOCK_HASH_PRE_PMC2_N_SIZE;
-    
     scrypt_N_1_1_256(BEGIN(nVersion), BEGIN(thash), target_N_size);
     
     return thash;
