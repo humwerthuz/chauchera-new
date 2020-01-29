@@ -175,10 +175,10 @@ public:
         consensus.nMajorityWindow = 1000;
         consensus.BIP34Height = 710000;
         consensus.BIP34Hash = uint256S("fa09d204a83a768ed5a7c8d441fa62f2043abf420cff1226c7b4329aeb9d51cf");
-        consensus.powLimit = uint256S("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+        consensus.powLimit = uint256S("00011fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
         consensus.nPowTargetTimespan = 30 * 60; // Chaucha: 30 min
-        consensus.nPowTargetSpacing = 1 * 60; // Chaucha: 1 min
-        consensus.fPowAllowMinDifficultyBlocks = false;
+        consensus.nPowTargetSpacing = 0.5 * 60; // Chaucha: 30 secs
+        consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = false;
         consensus.nRuleChangeActivationThreshold = 6048; // 75% of 8064
         consensus.nMinerConfirmationWindow = 8064; // nPowTargetTimespan / nPowTargetSpacing * 4
@@ -187,7 +187,7 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = 1230767999; // December 31, 2008
 
         /** DarkGravityWell v3 Fork Params - Humwerthuz @ 30/12/2017 **/
-        consensus.nPowDGWHeight = 20; //DGW always on
+        consensus.nPowDGWHeight = 0; //DGW always on
 
         // Propuestas de Mejora para Chaucha (PMC)
         consensus.PMC1 = 30;
@@ -226,10 +226,10 @@ public:
         vFixedSeeds.clear();
         vSeeds.clear();
         // nodes with support for servicebits filtering should be at the top
-        vSeeds.push_back(CDNSSeedData("fn1.cha.harc.cl", "fn1.cha.harc.cl"));
-        vSeeds.push_back(CDNSSeedData("fn2.cha.harc.cl", "fn2.cha.harc.cl"));
+        //vSeeds.push_back(CDNSSeedData("fn1.cha.harc.cl", "fn1.cha.harc.cl"));
+        //vSeeds.push_back(CDNSSeedData("fn2.cha.harc.cl", "fn2.cha.harc.cl"));
         // PMC1 testnet
-        vSeeds.push_back(CDNSSeedData("testnet.chaucha.party", "testnet.chaucha.party"));
+        //vSeeds.push_back(CDNSSeedData("testnet.chaucha.party", "testnet.chaucha.party"));
 
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,65);
@@ -256,6 +256,10 @@ public:
                 //   (the tx=... number in the SetBestChain debug.log lines)
                 0     // * estimated number of transactions per day after checkpoint
         };
+
+        //SOLO TEMPORAL
+        vFixedSeeds.clear();
+        vSeeds.clear();
 
     }
 };
