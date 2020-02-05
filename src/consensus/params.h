@@ -67,8 +67,12 @@ struct Params {
     int nPowDGWHeight;
 
     // Propuestas de Mejora para Chaucha
-    int PMC1;
-    int PMC2;
+    int PMC1ActivationHeight;
+
+    // PMC2
+    int PMC2ActivationHeight;
+    int32_t PMC2MinVersionRequired;
+    int PMC2DifficultyAdjustmentWindowSize;
 };
 } // namespace Consensus
 

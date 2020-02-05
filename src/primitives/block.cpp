@@ -16,24 +16,18 @@ uint256 CBlockHeader::GetHash() const
     return SerializeHash(*this);
 }
 
-uint256 CBlockHeader::GetPoWHash(uint8_t hash_mode) const
+uint256 CBlockHeader::GetPoWHash() const
 {
     uint256 thash;
+    uint256 chash = GetHash();
     unsigned int target_N_size;
 
-    switch (hash_mode){
-        case BLOCK_HASH_PRE_PMC2_MODE:
-            target_N_size = BLOCK_HASH_PRE_PMC2_N_SIZE;
-            break;
-        case BLOCK_HASH_PMC2_MODE:
-            target_N_size = BLOCK_HASH_PMC2_N_SIZE;
-            break;
-        default:
-            target_N_size = BLOCK_HASH_PRE_PMC2_N_SIZE;;
-            break;
-    }
-    printf("scrypt: using N size %d \n", target_N_size);
+    target_N_size = nVersion < 0x30000000 ? BLOCK_HASH_PRE_PMC2_N_SIZE : BLOCK_HASH_PMC2_N_SIZE;
+
+    printf("GetPoWHash: using N size %d for nVersion %d at block %s \n", target_N_size, nVersion, chash.ToString().c_str());
+
     scrypt_N_1_1_256(BEGIN(nVersion), BEGIN(thash), target_N_size);
+    
     return thash;
 }
 

@@ -1702,10 +1702,7 @@ bool ReadBlockFromDisk(CBlock& block, const CDiskBlockPos& pos, const Consensus:
         return error("%s: Deserialize or I/O error - %s at %s", __func__, e.what(), pos.ToString());
     }
 
-    int scrypt_mode = chainActive.Height() > consensusParams.PMC2 ? BLOCK_HASH_PMC2_MODE : BLOCK_HASH_PRE_PMC2_MODE;
-
-    // Check the header
-    if (!CheckProofOfWork(block.GetPoWHash(scrypt_mode), block.nBits, consensusParams))
+    if (!CheckProofOfWork(block.GetPoWHash(), block.nBits, consensusParams))
         return error("ReadBlockFromDisk: Errors in block header at %s", pos.ToString());
 
     return true;
@@ -1718,6 +1715,7 @@ bool ReadBlockFromDisk(CBlock& block, const CBlockIndex* pindex, const Consensus
     if (block.GetHash() != pindex->GetBlockHash())
         return error("ReadBlockFromDisk(CBlock&, CBlockIndex*): GetHash() doesn't match index for %s at %s",
                 pindex->ToString(), pindex->GetBlockPos().ToString());
+
     return true;
 }
 
@@ -1737,7 +1735,7 @@ CAmount GetBlockSubsidy(int nHeight, const Consensus::Params& consensusParams)
     if (nHeight > 2834 && nHeight <= 50000) //En realidad partio desde el 2835.
         nSubsidy = (50000/nHeight + 10) * COIN;
 
-    if (nHeight >= consensusParams.PMC1)
+    if (nHeight >= consensusParams.PMC1ActivationHeight)
         nSubsidy = 1.5 * COIN;
 
     // Subsidy is cut in half every 210,000 blocks which will occur approximately every 4 years.
@@ -3398,9 +3396,8 @@ bool FindUndoPos(CValidationState &state, int nFile, CDiskBlockPos &pos, unsigne
 
 bool CheckBlockHeader(const CBlockHeader& block, CValidationState& state, const Consensus::Params& consensusParams, bool fCheckPOW)
 {
-    int scrypt_mode = chainActive.Height() > consensusParams.PMC2 ? BLOCK_HASH_PMC2_MODE : BLOCK_HASH_PRE_PMC2_MODE;
     // Check proof of work matches claimed amount
-    if (fCheckPOW && !CheckProofOfWork(block.GetPoWHash(scrypt_mode), block.nBits, consensusParams))
+    if (fCheckPOW && !CheckProofOfWork(block.GetPoWHash(), block.nBits, consensusParams))
         return state.DoS(50, false, REJECT_INVALID, "high-hash", false, "proof of work failed");
 
     return true;
@@ -3569,6 +3566,16 @@ bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationState& sta
             if (IsSuperMajority(2, pindexPrev, consensusParams.nMajorityRejectBlockOutdated, consensusParams))
                 enforceV2 = true;
         }
+    }
+
+    bool enforceV3 = false;
+    if (block.nVersion < consensusParams.PMC2MinVersionRequired && nHeight >= consensusParams.PMC2ActivationHeight) {
+        enforceV3 = true;
+    }
+
+    if (enforceV3) {
+        return state.Invalid(false, REJECT_OBSOLETE, strprintf("bad-version(0x%08x)", block.nVersion),
+                             strprintf("rejected nVersion=0x%08x for block height %d", block.nVersion, nHeight));
     }
 
     if (enforceV2) {

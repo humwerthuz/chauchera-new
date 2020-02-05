@@ -67,8 +67,7 @@ public:
 
     uint256 GetHash() const;
 
-    //uint256 GetPoWHash(uint8_t hash_mode = BLOCK_HASH_PRE_PMC2_MODE) const;
-    uint256 GetPoWHash(uint8_t hash_mode) const;  // do not use default to force errors on unmodified calls
+    uint256 GetPoWHash() const;
 
     int64_t GetBlockTime() const
     {
