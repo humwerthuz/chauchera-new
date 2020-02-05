@@ -10,6 +10,7 @@
 #include "tinyformat.h"
 #include "utilstrencodings.h"
 #include "crypto/common.h"
+#include "chainparams.h"
 
 uint256 CBlockHeader::GetHash() const
 {
@@ -22,7 +23,10 @@ uint256 CBlockHeader::GetPoWHash() const
     uint256 chash = GetHash();
     unsigned int target_N_size;
 
-    target_N_size = nVersion < 0x30000000 ? BLOCK_HASH_PRE_PMC2_N_SIZE : BLOCK_HASH_PMC2_N_SIZE;
+    if ( nVersion < Params().GetConsensus().PMC2MinVersionRequired )
+        target_N_size = BLOCK_HASH_PRE_PMC2_N_SIZE;
+    else
+        target_N_size = Params().GetConsensus().PMC2ScryptNFactor;
 
     printf("GetPoWHash: using N size %d for nVersion %d at block %s \n", target_N_size, nVersion, chash.ToString().c_str());
 

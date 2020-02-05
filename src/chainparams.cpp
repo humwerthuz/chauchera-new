@@ -98,6 +98,7 @@ public:
         consensus.PMC2ActivationHeight = 1200000;
         consensus.PMC2MinVersionRequired = 0x30000000UL;
         consensus.PMC2DifficultyAdjustmentWindowSize = 24;
+        consensus.PMC2ScryptNFactor = (1 << (14 + 1));
 
         // Deployment of BIP68, BIP112, and BIP113.
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].bit = 0;
@@ -203,6 +204,7 @@ public:
         consensus.PMC2ActivationHeight = 50;
         consensus.PMC2MinVersionRequired = 0x30000000UL;
         consensus.PMC2DifficultyAdjustmentWindowSize = 24;
+        consensus.PMC2ScryptNFactor = (1 << (14 + 1));
 
         // Deployment of BIP68, BIP112, and BIP113.
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].bit = 0;

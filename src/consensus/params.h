@@ -73,6 +73,7 @@ struct Params {
     int PMC2ActivationHeight;
     int32_t PMC2MinVersionRequired;
     int PMC2DifficultyAdjustmentWindowSize;
+    unsigned int PMC2ScryptNFactor;
 };
 } // namespace Consensus
 
