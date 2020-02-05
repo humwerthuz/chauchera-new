@@ -91,8 +91,13 @@ public:
         consensus.nPowDGWHeight = 147000; //DGW on starting from block 147.000
 
         // Propuestas de Mejora para Chaucha (PMC)
-        consensus.PMC1 = 220000;
-        consensus.PMC2 = 1200000;  //block height 1.200.000.-
+        consensus.PMC1ActivationHeight = 220000;
+
+
+        // PMC2 Activa el cambio de Scrypt a ScryptN
+        consensus.PMC2ActivationHeight = 1200000;
+        consensus.PMC2MinVersionRequired = 0x30000000UL;
+        consensus.PMC2DifficultyAdjustmentWindowSize = 24;
 
         // Deployment of BIP68, BIP112, and BIP113.
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].bit = 0;
@@ -175,7 +180,8 @@ public:
         consensus.nMajorityWindow = 1000;
         consensus.BIP34Height = 710000;
         consensus.BIP34Hash = uint256S("fa09d204a83a768ed5a7c8d441fa62f2043abf420cff1226c7b4329aeb9d51cf");
-        consensus.powLimit = uint256S("00011fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+        //consensus.powLimit = uint256S("00011fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+        consensus.powLimit = uint256S("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
         consensus.nPowTargetTimespan = 30 * 60; // Chaucha: 30 min
         consensus.nPowTargetSpacing = 0.5 * 60; // Chaucha: 30 secs
         consensus.fPowAllowMinDifficultyBlocks = true;
@@ -189,9 +195,14 @@ public:
         /** DarkGravityWell v3 Fork Params - Humwerthuz @ 30/12/2017 **/
         consensus.nPowDGWHeight = 0; //DGW always on
 
+        // Artesanamente todos los parametros de las PMC van como PMC(Num)(CamelCase param name). ej: PMC1ActivationHeight.
         // Propuestas de Mejora para Chaucha (PMC)
-        consensus.PMC1 = 30;
-        consensus.PMC2 = 50;  // completamente random, Target = 435
+        consensus.PMC1ActivationHeight = 30;
+
+        // PMC2 Activa el cambio de Scrypt a ScryptN
+        consensus.PMC2ActivationHeight = 50;
+        consensus.PMC2MinVersionRequired = 0x30000000UL;
+        consensus.PMC2DifficultyAdjustmentWindowSize = 24;
 
         // Deployment of BIP68, BIP112, and BIP113.
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].bit = 0;
