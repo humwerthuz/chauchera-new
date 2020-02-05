@@ -71,7 +71,7 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
 
     int64_t nNextBlockHeight = pindexLast->nHeight + 1;
 
-    if( (nNextBlockHeight >= params.PMC2) && (nNextBlockHeight < (params.PMC2 + 24)) ) {
+    if( (nNextBlockHeight >= params.PMC2ActivationHeight) && (nNextBlockHeight < (params.PMC2ActivationHeight + params.PMC2DifficultyAdjustmentWindowSize)) ) {
         printf("%s: Block Height %ld: minPOW window for PMC2 activated, returning nProofOfWorkLimit\n", __func__, nNextBlockHeight);
         return nProofOfWorkLimit;
     }

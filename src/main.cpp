@@ -1735,7 +1735,7 @@ CAmount GetBlockSubsidy(int nHeight, const Consensus::Params& consensusParams)
     if (nHeight > 2834 && nHeight <= 50000) //En realidad partio desde el 2835.
         nSubsidy = (50000/nHeight + 10) * COIN;
 
-    if (nHeight >= consensusParams.PMC1)
+    if (nHeight >= consensusParams.PMC1ActivationHeight)
         nSubsidy = 1.5 * COIN;
 
     // Subsidy is cut in half every 210,000 blocks which will occur approximately every 4 years.
@@ -3569,7 +3569,7 @@ bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationState& sta
     }
 
     bool enforceV3 = false;
-    if (block.nVersion < 0x30000000UL && nHeight >= consensusParams.PMC2) {
+    if (block.nVersion < consensusParams.PMC2MinVersionRequired && nHeight >= consensusParams.PMC2ActivationHeight) {
         enforceV3 = true;
     }
 
