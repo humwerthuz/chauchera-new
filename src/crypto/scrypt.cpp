@@ -29,7 +29,6 @@
 
 #include "crypto/scrypt.h"
 //#include "util.h"
-#include <util.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
@@ -330,8 +329,6 @@ void scrypt_N_1_1_256(const char *input, char *output, unsigned int N)
 {
 	char *scratchpad;
 	scratchpad = (char*)malloc((128 * N + 63)*sizeof(char));
-	printf("%s: calling scrypt_N_1_1_256_sp\n", __func__);
     scrypt_N_1_1_256_sp(input, output, scratchpad, N);
-    printf("%s: freeing scratchpad memory\n", __func__);
     free(scratchpad);
 }
